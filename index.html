@@ -340,10 +340,7 @@ button{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
 <div id="drive-banner" style="background:#1a73e8;color:white;text-align:center;padding:8px 14px;font-size:.75rem;font-weight:700;display:none">
   📂 Pour le son : ouvre ce fichier depuis <strong>Google Drive</strong> dans Chrome
 </div>
-<div id="firefox-banner" style="background:#ff9500;color:white;text-align:center;padding:10px 16px;font-size:.85rem;font-weight:700;line-height:1.4">
-  🦊 Pour que le son fonctionne : ouvre ce fichier avec <strong>Firefox</strong> (pas Chrome)<br>
-  <span style="font-weight:400;font-size:.78rem">Télécharge Firefox gratuitement sur mozilla.org si tu ne l'as pas</span>
-</div>
+<div id="firefox-banner" style="background:#1A7A4A;color:white;text-align:center;padding:8px 14px;font-size:.78rem;font-weight:700">✓ Version en ligne — son activé</div>
 <div class="top-bar">
   <div>
     <div class="top-title">Kalanden <span>Fransɛ</span></div>
@@ -671,24 +668,21 @@ function showTab(name,btn){
 //  SPEECH — sync dans le handler click (fix Android file://)
 // ═══════════════════════════════════════════════
 function speak(text, slow) {
-  if (!window.speechSynthesis) {
-    alert("Ton navigateur ne supporte pas la synthèse vocale.");
-    return;
-  }
-  window.speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(text);
-  u.lang = "fr-FR";
-  u.rate = slow ? 0.55 : 0.85;
-  u.pitch = 1.0;
-  u.volume = 1.0;
-  var voices = window.speechSynthesis.getVoices();
-  for (var i = 0; i < voices.length; i++) {
-    if (voices[i].lang && voices[i].lang.indexOf("fr") === 0) {
-      u.voice = voices[i];
-      break;
+  var ss = window.speechSynthesis;
+  if (!ss) return;
+  ss.cancel();
+  setTimeout(function() {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'fr-FR';
+    u.rate = slow ? 0.55 : 0.85;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    var voices = ss.getVoices();
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang === 'fr-FR') { u.voice = voices[i]; break; }
     }
-  }
-  window.speechSynthesis.speak(u);
+    ss.speak(u);
+  }, 50);
 }
 
 // Détecter fichier local et afficher bannière
@@ -738,20 +732,7 @@ function speak(text, slow) {
   }
 }
 
-// Détecter Chrome et afficher avertissement
-(function() {
-  var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  var isFirefox = typeof InstallTrigger !== 'undefined';
-  var b = document.getElementById('firefox-banner');
-  if (b) {
-    if (isFirefox) {
-      b.style.background = '#1A7A4A';
-      b.innerHTML = '✓ Firefox détecté — le son est activé !';
-    } else if (isChrome) {
-      b.style.display = 'block';
-    }
-  }
-})();
+
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
 function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/`/g,'\\`');}
