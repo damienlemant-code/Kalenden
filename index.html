@@ -1,3 +1,18 @@
+1 élément sélectionné 
+
+Aller au contenu
+Utiliser Gmail avec un lecteur d'écran
+1 sur 1 015
+(aucun objet)
+Boîte de réception
+
+Damien Lemant <damien.lemant@gmail.com>
+Pièces jointes
+19:50 (il y a 2 minutes)
+À moi
+
+ Une pièce jointe
+  •  Analysé par Gmail
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -334,6 +349,50 @@ button{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
 
 </head>
 <body>
+
+<!-- ÉCRAN DÉMARRAGE -->
+<div id="start-screen" style="
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:#0f0e17;z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:system-ui,sans-serif;
+">
+  <div style="font-family:Georgia,serif;font-size:2.2rem;color:#fffffe;margin-bottom:8px">
+    Kalanden <span style="color:#e94560">Fransɛ</span>
+  </div>
+  <div style="font-size:.85rem;color:#a7a9be;margin-bottom:48px">Malinké ↔ Français</div>
+  <button id="start-btn" style="
+    background:#e94560;border:none;border-radius:14px;
+    padding:18px 48px;font-size:1.1rem;font-weight:800;
+    color:white;cursor:pointer;font-family:system-ui,sans-serif;
+    box-shadow:0 4px 24px rgba(233,69,96,.4);
+    letter-spacing:.5px;
+  ">
+    🔊 Appuyer pour commencer
+  </button>
+  <div style="font-size:.72rem;color:#a7a9be;margin-top:16px;text-align:center;padding:0 32px">
+    Ce bouton active le son sur votre appareil
+  </div>
+</div>
+
+<script>
+document.getElementById('start-btn').addEventListener('click', function() {
+  // Initialiser speechSynthesis dans le handler click direct
+  if (window.speechSynthesis) {
+    // Prononcer un silence pour "débloquer" le son
+    var u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    u.lang = 'fr-FR';
+    window.speechSynthesis.speak(u);
+    window.speechSynthesis.cancel();
+    // Charger les voix
+    window.speechSynthesis.getVoices();
+  }
+  // Masquer l'écran de démarrage
+  document.getElementById('start-screen').style.display = 'none';
+});
+</script>
+
 <div id="app">
 
 <!-- TOP BAR -->
@@ -1158,3 +1217,5 @@ initRecons();
 </script>
 </body>
 </html>
+index.html
+Affichage de index.html en cours...
