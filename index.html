@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1024">
+<title>Kalanden Franse - Apprendre le Français</title>
+
+<style>
+:root {
+  --bg:#F2EDE3; --paper:#FFFCF5; --ink:#1A1A2E;
+  --accent:#C8441A; --blue:#2563A8; --green:#1A7A4A;
+  --muted:#7A7468; --line:#E2DAD0; --hl:#FFF3CD; --hl2:#E8F4FF;
+  --ok:#1A7A4A; --ko:#C8441A;
+  --permis:#0D6E6E;
+  --tag-quotidien:#2563A8; --tag-admin:#7B3FB0; --tag-sante:#C8441A;
+  --tag-transport:#1A7A4A; --tag-travail:#A07020; --tag-social:#B03060;
+  --tag-permis:#0D6E6E;
+  --r:14px; --shadow:0 2px 12px rgba(0,0,0,.10);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
+button{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;cursor:pointer}
+
+/* ── LAYOUT ── */
+#app{max-width:600px;margin:0 auto;padding:0 0 calc(72px + var(--safe-bottom))}
+
+/* ── HEADER ── */
+.top-bar{
+  position:sticky;top:0;z-index:100;
+  background:var(--ink);color:white;
+  padding:14px 16px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-title{font-family:Georgia,serif;font-size:1.3rem;letter-spacing:-.3px}
+.top-title span{color:#FFB347}
+.top-sub{font-size:.65rem;opacity:.65;margin-top:1px}
+.xp-chip{
+  background:rgba(255,255,255,.12);border-radius:99px;
+  padding:4px 12px;font-size:.8rem;font-weight:800;
+  display:flex;align-items:center;gap:5px;
+}
+.xp-chip .star{font-size:.9rem}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--paper);border-top:1.5px solid var(--line);
+  display:flex;padding:0 0 var(--safe-bottom);
+  box-shadow:0 -4px 16px rgba(0,0,0,.08);
+}
+.bnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:8px 4px 6px;border:none;background:none;
+  font-size:.58rem;font-weight:700;color:var(--muted);
+  letter-spacing:.3px;text-transform:uppercase;gap:3px;
+  transition:color .15s;cursor:pointer;touch-action:manipulation;
+}
+.bnav-btn .ico{font-size:1.3rem;line-height:1}
+.bnav-btn.active{color:var(--accent)}
+.bnav-btn.active .ico-bar{
+  width:20px;height:2px;background:var(--accent);border-radius:99px;margin-top:2px;
+}
+
+/* ── TAB PAGES ── */
+.tab-page{display:none;padding:14px 14px 0;animation:fadeUp .25s ease both}
+.tab-page.active{display:block}
+
+/* ── CARD ── */
+.card{
+  background:var(--paper);border-radius:var(--r);
+  padding:20px 18px 16px;box-shadow:var(--shadow);
+  border:1px solid var(--line);margin-bottom:12px;
+}
+.card-label{
+  font-size:.63rem;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{padding:0 14px;margin:10px 0 4px}
+.prog-outer{height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+.prog-inner{height:100%;background:var(--accent);border-radius:99px;transition:width .4s ease}
+.prog-label{font-size:.7rem;color:var(--muted);font-weight:700;margin-top:5px;text-align:right}
+
+/* ── CAT SCROLL ── */
+.cat-scroll{
+  display:flex;gap:7px;padding:10px 14px 4px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cpill{
+  flex-shrink:0;padding:6px 13px;border-radius:99px;
+  font-size:.73rem;font-weight:800;border:2px solid;
+  transition:all .18s;white-space:nowrap;background:transparent;
+}
+.cpill-all{color:var(--ink);border-color:rgba(26,26,46,.2);background:rgba(26,26,46,.06)}
+.cpill-all.on{background:var(--ink);color:white}
+.cpill-quotidien{color:var(--tag-quotidien);border-color:rgba(37,99,168,.25);background:rgba(37,99,168,.06)}
+.cpill-quotidien.on{background:var(--tag-quotidien);color:white}
+.cpill-admin{color:var(--tag-admin);border-color:rgba(123,63,176,.25);background:rgba(123,63,176,.06)}
+.cpill-admin.on{background:var(--tag-admin);color:white}
+.cpill-sante{color:var(--tag-sante);border-color:rgba(200,68,26,.25);background:rgba(200,68,26,.06)}
+.cpill-sante.on{background:var(--tag-sante);color:white}
+.cpill-transport{color:var(--tag-transport);border-color:rgba(26,122,74,.25);background:rgba(26,122,74,.06)}
+.cpill-transport.on{background:var(--tag-transport);color:white}
+.cpill-travail{color:var(--tag-travail);border-color:rgba(160,112,32,.25);background:rgba(160,112,32,.06)}
+.cpill-travail.on{background:var(--tag-travail);color:white}
+.cpill-social{color:var(--tag-social);border-color:rgba(176,48,96,.25);background:rgba(176,48,96,.06)}
+.cpill-social.on{background:var(--tag-social);color:white}
+.cpill-permis{color:var(--tag-permis);border-color:rgba(13,110,110,.25);background:rgba(13,110,110,.06)}
+.cpill-permis.on{background:var(--tag-permis);color:white}
+
+/* ── MOT DISPLAY ── */
+.mot-word{font-family:Georgia,serif;font-size:2.8rem;text-align:center;letter-spacing:-1px;line-height:1;margin-bottom:6px}
+.mot-ph{text-align:center;font-size:.9rem;color:var(--blue);font-style:italic;font-weight:400;margin-bottom:8px}
+.mot-mk{text-align:center;font-size:1rem;font-weight:800;color:var(--green);margin-bottom:3px}
+.mot-fr{text-align:center;font-size:.78rem;color:var(--muted);font-style:italic;margin-bottom:12px}
+.mot-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:99px;
+  font-size:.65rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+}
+
+/* ── SYLLABLES ── */
+.syls{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:14px 0 4px}
+.syl{
+  font-family:Georgia,serif;font-size:1.25rem;
+  padding:6px 13px;border-radius:8px;
+  transition:transform .12s,opacity .12s;
+  -webkit-user-select:none;user-select:none;
+}
+.syl:active{transform:scale(.93);opacity:.7}
+.syl:nth-child(odd){background:rgba(200,68,26,.1);color:var(--accent)}
+.syl:nth-child(even){background:rgba(37,99,168,.1);color:var(--blue)}
+.syl-hint{text-align:center;font-size:.63rem;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+
+/* ── LISTEN BUTTONS ── */
+.listen-row{display:flex;justify-content:center;gap:10px;margin-bottom:14px}
+.btn-snd{
+  display:flex;align-items:center;gap:6px;
+  border:none;border-radius:10px;
+  padding:12px 20px;font-size:.84rem;font-weight:800;
+  transition:transform .12s,opacity .12s;
+  -webkit-user-select:none;user-select:none;
+  cursor:pointer;min-height:48px;touch-action:manipulation;
+}
+.btn-snd:active{transform:scale(.94);opacity:.75}
+.btn-snd.playing{opacity:.55;pointer-events:none}
+.btn-snd.normal{background:var(--ink);color:white}
+.btn-snd.slow{background:var(--blue);color:white}
+
+/* ── EXAMPLE BOX ── */
+.ex-box{border-radius:10px;padding:11px 14px;margin-bottom:10px}
+.ex-box.fr{background:var(--hl);border-left:3px solid var(--accent)}
+.ex-box.mk{background:rgba(26,122,74,.07);border-left:3px solid var(--green)}
+.ex-lbl{font-size:.62rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.ex-box.fr .ex-lbl{color:var(--accent)}
+.ex-box.mk .ex-lbl{color:var(--green)}
+.ex-txt{font-size:.95rem;color:var(--ink);line-height:1.45}
+.ex-sub{font-size:.75rem;color:var(--muted);margin-top:3px;font-style:italic}
+
+/* ── NAV BUTTONS ── */
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.btn-nav{
+  border-radius:10px;padding:12px 20px;
+  font-size:.84rem;font-weight:800;border:2px solid var(--ink);
+  background:transparent;color:var(--ink);
+  transition:transform .12s,opacity .12s;
+  -webkit-user-select:none;user-select:none;
+  cursor:pointer;min-height:48px;touch-action:manipulation;
+}
+.btn-nav:active:not(:disabled){transform:scale(.94);opacity:.75}
+.btn-nav.primary{background:var(--accent);border-color:var(--accent);color:white}
+.btn-nav:disabled,.btn-nav[disabled]{opacity:.3;pointer-events:none;cursor:default}
+
+/* ── QUIZ ── */
+.q-text{font-size:1.05rem;font-weight:700;line-height:1.45;margin-bottom:5px}
+.q-sub{font-size:.78rem;color:var(--muted);font-style:italic;margin-bottom:16px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.choice{
+  background:var(--paper);border:2px solid var(--line);border-radius:10px;
+  padding:13px 12px;font-size:.88rem;font-weight:700;
+  text-align:left;color:var(--ink);
+  transition:transform .12s,border-color .15s;
+  line-height:1.3;
+  -webkit-user-select:none;user-select:none;
+  cursor:pointer;min-height:48px;touch-action:manipulation;
+}
+.choice:active:not(:disabled){transform:scale(.96)}
+.choice.ok{background:rgba(26,122,74,.1);border-color:var(--ok);color:var(--ok)}
+.choice.ko{background:rgba(200,68,26,.08);border-color:var(--ko);color:var(--ko)}
+.choice:disabled{pointer-events:none}
+.feedback{
+  border-radius:10px;padding:11px 14px;font-size:.88rem;font-weight:700;
+  display:none;margin-bottom:10px;
+}
+.feedback.show{display:block;animation:fadeUp .25s ease both}
+.feedback.ok{background:rgba(26,122,74,.1);color:var(--ok);border-left:3px solid var(--ok)}
+.feedback.ko{background:rgba(200,68,26,.08);color:var(--ko);border-left:3px solid var(--ko)}
+.score-lbl{font-size:.78rem;color:var(--muted);font-weight:700}
+.score-lbl strong{color:var(--ok)}
+
+/* ── PHRASES ── */
+.sent{font-family:Georgia,serif;font-size:1.3rem;line-height:1.65;margin-bottom:10px;color:var(--ink)}
+.wpill{display:inline;cursor:pointer;border-bottom:2px solid transparent;border-radius:2px;padding:0 2px;transition:all .15s}
+.wpill:hover,.wpill:active{background:rgba(37,99,168,.12);border-bottom-color:var(--blue)}
+.wpill.hl{background:var(--hl);border-bottom-color:var(--accent)}
+.wtip{background:var(--ink);color:white;border-radius:10px;padding:12px 14px;margin-top:10px;animation:fadeUp .2s ease both}
+.wtip-w{font-family:Georgia,serif;font-size:1.05rem;margin-bottom:3px}
+.wtip-ph{color:#A8C4E0;font-style:italic;font-size:.78rem}
+.wtip-def{color:#CBD5E0;font-size:.78rem;margin-top:2px}
+.wtip-mk{color:#6EE7A0;font-size:.8rem;font-weight:800;margin-top:5px}
+.wtip-mk::before{content:"🟢 "}
+
+/* ── DICTÉE ── */
+.dictee-info{text-align:center;font-size:.84rem;color:var(--muted);font-weight:700;margin-bottom:16px;line-height:1.5}
+.dictee-info em{display:block;font-size:.73rem;color:var(--blue);margin-top:3px;font-style:italic}
+.dinput{
+  width:100%;font-family:Georgia,serif;font-size:1.6rem;
+  border:none;border-bottom:2.5px solid var(--ink);background:transparent;
+  text-align:center;color:var(--ink);padding:8px 0;outline:none;
+  letter-spacing:1px;transition:border-color .2s;
+  -webkit-appearance:none;border-radius:0;
+}
+.dinput:focus{border-bottom-color:var(--blue)}
+.dinput.ok{border-bottom-color:var(--ok);color:var(--ok)}
+.dinput.ko{border-bottom-color:var(--ko);color:var(--ko)}
+.dhint{text-align:center;font-size:.72rem;color:var(--muted);margin-top:6px;min-height:1.2em}
+
+/* ── RECONSTITUTION ── */
+.recons-label{font-size:.63rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.recons-zone{min-height:50px;border:2px dashed var(--line);border-radius:10px;padding:9px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.rwords{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 6px;min-height:44px}
+.rtok{
+  padding:9px 15px;border-radius:8px;font-size:.88rem;font-weight:700;
+  border:2px solid;transition:transform .12s;
+  -webkit-user-select:none;user-select:none;
+  cursor:pointer;min-height:44px;touch-action:manipulation;
+  display:inline-flex;align-items:center;
+}
+.rtok:active{transform:scale(.92)}
+.rtok.avail{background:var(--hl2);border-color:rgba(37,99,168,.3);color:var(--blue)}
+.rtok.placed{background:rgba(26,122,74,.1);border-color:var(--ok);color:var(--ok)}
+.recons-tr{font-size:.78rem;font-style:italic;color:var(--green);font-weight:700;margin-top:5px}
+
+/* ── PHONÉTIQUE ── */
+.phon-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.phon-card{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:13px 12px;box-shadow:var(--shadow)}
+.phon-letters{font-family:Georgia,serif;font-size:1.5rem;color:var(--accent);margin-bottom:2px}
+.phon-sound{font-size:.78rem;color:var(--blue);font-style:italic;margin-bottom:4px}
+.phon-rule{font-size:.74rem;color:var(--muted);line-height:1.4}
+.phon-mk{font-size:.72rem;color:var(--green);margin-top:5px;font-style:italic}
+.phon-exs{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.phon-ex{font-size:.7rem;background:var(--hl2);color:var(--blue);padding:2px 8px;border-radius:99px;font-weight:700}
+.phon-ex:active{background:var(--blue);color:white}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.scard{background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:14px 8px;text-align:center}
+.snum{font-family:Georgia,serif;font-size:1.9rem;color:var(--accent);line-height:1}
+.slbl{font-size:.6rem;color:var(--muted);font-weight:800;letter-spacing:.4px;text-transform:uppercase;margin-top:3px}
+.hist-list{list-style:none}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+.hist-item:last-child{border-bottom:none}
+.hscore.g{color:var(--ok);font-weight:800}
+.hscore.m{color:var(--tag-travail);font-weight:800}
+.hscore.b{color:var(--ko);font-weight:800}
+
+/* ── RÉSULTATS ── */
+.result-big{text-align:center;padding:28px 0 18px}
+.result-num{font-family:Georgia,serif;font-size:4rem;color:var(--ok);line-height:1}
+.result-pct{font-size:1.1rem;color:var(--muted);font-weight:800;margin-top:4px}
+.result-msg{font-size:.9rem;color:var(--muted);margin-top:5px}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:36px 0;color:var(--muted);font-size:.9rem}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+.shake{animation:shake .3s ease}
+.pop{animation:pop .25s ease}
+
+/* ── RESPONSIVE ── */
+@media(max-width:360px){
+  .choices{grid-template-columns:1fr}
+  .mot-word{font-size:2.3rem}
+  .phon-grid{grid-template-columns:1fr}
+}
+.dm-btn{
+  flex:1;padding:10px 0;border-radius:10px;font-size:.84rem;font-weight:800;
+  border:2px solid var(--line);background:transparent;color:var(--muted);
+  transition:all .18s;cursor:pointer;min-height:48px;touch-action:manipulation;
+}
+.dm-btn.dm-on{background:var(--accent);border-color:var(--accent);color:white;}
+.dm-btn:active{transform:scale(.95);opacity:.8}
+
+<style>
+/* ── STYLE PC ── */
+@media (min-width: 600px) {
+  #app { max-width: 780px !important; }
+  .card { padding: 28px 32px 24px !important; }
+  .top-bar { padding: 18px 24px 14px !important; }
+  .top-title { font-size: 1.7rem !important; }
+  .mot-word { font-size: 4rem !important; }
+  .mot-ph { font-size: 1.1rem !important; }
+  .mot-mk { font-size: 1.2rem !important; }
+  .sent { font-size: 1.6rem !important; }
+  .choice { font-size: 1rem !important; padding: 16px 14px !important; }
+  .btn-snd { padding: 12px 28px !important; font-size: 1rem !important; min-height: 52px !important; }
+  .btn-nav { padding: 11px 24px !important; font-size: .95rem !important; min-height: 52px !important; }
+  .bottom-nav { max-width: 780px !important; left: 50% !important; transform: translateX(-50%) !important; }
+  .bnav-btn { font-size: .65rem !important; padding: 10px 4px 8px !important; }
+  .bnav-btn .ico { font-size: 1.5rem !important; }
+  .syl { font-size: 1.6rem !important; padding: 8px 18px !important; }
+  .tab-page { padding: 18px 18px 0 !important; }
+  .cat-scroll { padding: 12px 18px 6px !important; }
+  .cpill { font-size: .82rem !important; padding: 7px 16px !important; }
+  .choices { grid-template-columns: 1fr 1fr !important; gap: 14px !important; }
+  .dinput { font-size: 2rem !important; }
+  .phon-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+  body { background-attachment: fixed; }
+}
+/* Curseur normal sur PC */
+.btn-snd, .btn-nav, .cpill, .choice, .syl, .rtok, .wpill, .phon-ex, .bnav-btn {
+  cursor: pointer !important;
+}
+</style>
+
+</head>
+<body>
+<div id="app">
+
+<!-- TOP BAR -->
+<div id="drive-banner" style="background:#1a73e8;color:white;text-align:center;padding:8px 14px;font-size:.75rem;font-weight:700;display:none">
+  📂 Pour le son : ouvre ce fichier depuis <strong>Google Drive</strong> dans Chrome
+</div>
+<div id="firefox-banner" style="background:#ff9500;color:white;text-align:center;padding:10px 16px;font-size:.85rem;font-weight:700;line-height:1.4">
+  🦊 Pour que le son fonctionne : ouvre ce fichier avec <strong>Firefox</strong> (pas Chrome)<br>
+  <span style="font-weight:400;font-size:.78rem">Télécharge Firefox gratuitement sur mozilla.org si tu ne l'as pas</span>
+</div>
+<div class="top-bar">
+  <div>
+    <div class="top-title">Kalanden <span>Fransɛ</span></div>
+    <div class="top-sub">Malinké ↔ Français • Mobile</div>
+  </div>
+  <div class="xp-chip">
+    <span class="star">⭐</span>
+    <span id="xp-display">0</span> XP
+  </div>
+</div>
+
+<!-- PAGES -->
+<div id="pg-mots" class="tab-page active">
+  <div class="cat-scroll" id="cat-mots"></div>
+  <div class="prog-wrap"><div class="prog-outer"><div class="prog-inner" id="pb-mots" style="width:0%"></div></div><div class="prog-label" id="pt-mots"></div></div>
+  <div style="padding:0 0;margin-top:8px" id="card-mot"></div>
+</div>
+
+<div id="pg-phrases" class="tab-page">
+  <div class="prog-wrap"><div class="prog-outer"><div class="prog-inner" id="pb-phrases" style="width:0%"></div></div><div class="prog-label" id="pt-phrases"></div></div>
+  <div style="margin-top:8px" id="card-phrase"></div>
+</div>
+
+<div id="pg-quiz" class="tab-page">
+  <div class="cat-scroll" id="cat-quiz"></div>
+  <div class="prog-wrap"><div class="prog-outer"><div class="prog-inner" id="pb-quiz" style="width:0%"></div></div><div class="prog-label" id="pt-quiz"></div></div>
+  <div style="margin-top:8px" id="card-quiz"></div>
+</div>
+
+<div id="pg-dictee" class="tab-page">
+  <div style="display:flex;gap:8px;padding:10px 14px 4px">
+    <button id="dm-mots" class="dm-btn dm-on" onclick="setDicteeMode('mots')">🔤 Mots</button>
+    <button id="dm-phrases" class="dm-btn" onclick="setDicteeMode('phrases')">💬 Phrases</button>
+  </div>
+  <div class="prog-wrap"><div class="prog-outer"><div class="prog-inner" id="pb-dictee" style="width:0%"></div></div><div class="prog-label" id="pt-dictee"></div></div>
+  <div style="margin-top:8px" id="card-dictee"></div>
+</div>
+
+<div id="pg-recons" class="tab-page">
+  <div class="prog-wrap"><div class="prog-outer"><div class="prog-inner" id="pb-recons" style="width:0%"></div></div><div class="prog-label" id="pt-recons"></div></div>
+  <div style="margin-top:8px" id="card-recons"></div>
+</div>
+
+<div id="pg-phon" class="tab-page">
+  <div id="card-phon" style="margin-top:8px"></div>
+</div>
+
+<div id="pg-stats" class="tab-page">
+  <div id="card-stats" style="margin-top:8px"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-btn active" onclick="showTab('mots',this)"><span class="ico">📖</span>Mots<span class="ico-bar"></span></button>
+  <button class="bnav-btn" onclick="showTab('phrases',this)"><span class="ico">💬</span>Phrases</button>
+  <button class="bnav-btn" onclick="showTab('quiz',this)"><span class="ico">✏️</span>Quiz</button>
+  <button class="bnav-btn" onclick="showTab('dictee',this)"><span class="ico">🎧</span>Dictée</button>
+  <button class="bnav-btn" onclick="showTab('recons',this)"><span class="ico">🔀</span>Ordre</button>
+  <button class="bnav-btn" onclick="showTab('phon',this)"><span class="ico">🔤</span>Sons</button>
+  <button class="bnav-btn" onclick="showTab('stats',this)"><span class="ico">📊</span>Stats</button>
+</nav>
+
+</div><!-- #app -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  DONNÉES
+// ═══════════════════════════════════════════════
+
+const CATS = {
+  quotidien: {l:"Sɔrɔda",    e:"🏠", fr:"Quotidien"},
+  admin:     {l:"Kabila",     e:"📋", fr:"Administratif"},
+  sante:     {l:"Kɛnɛya",    e:"🏥", fr:"Santé"},
+  transport: {l:"Talikɛ",    e:"🚆", fr:"Transport"},
+  travail:   {l:"Baara",     e:"💼", fr:"Travail"},
+  social:    {l:"Jɛkulu",   e:"🤝", fr:"Social"},
+  permis:    {l:"Kondikɛ",  e:"🚗", fr:"Permis de conduire"},
+};
+
+const MOTS = [
+// ─── QUOTIDIEN ──────────────────────────────
+{word:"bonjour",       syl:["bon","jour"],           ph:"/bɔ̃.ʒuʁ/",       tr:"I ni sɔgɔma / I ni ce",        trfr:"bonjour",               cat:"quotidien", ex:"Bonjour, comment allez-vous ?",          ex_tr:"I ni ce, i ka kɛnɛ wa ?"},
+{word:"merci",         syl:["mer","ci"],             ph:"/mɛʁ.si/",         tr:"Aw ni baara",                  trfr:"merci",                 cat:"quotidien", ex:"Merci beaucoup pour votre aide.",        ex_tr:"Aw ni baara kosɛbɛ."},
+{word:"s'il vous plaît",syl:["s'il","vous","plaît"],ph:"/sil.vu.plɛ/",     tr:"Mɛnni kɛ",                    trfr:"s'il vous plaît",       cat:"quotidien", ex:"Un café, s'il vous plaît.",              ex_tr:"Kafe kelen, mɛnni kɛ."},
+{word:"de rien",       syl:["de","rien"],            ph:"/də.ʁjɛ̃/",         tr:"A tɛ fɛn ye",                  trfr:"de rien / je vous en prie", cat:"quotidien", ex:"— Merci ! — De rien !",            ex_tr:"— Aw ni baara ! — A tɛ fɛn ye !"},
+{word:"pardon",        syl:["par","don"],            ph:"/paʁ.dɔ̃/",         tr:"Hakɛtigiya",                   trfr:"pardon / excuse-moi",   cat:"quotidien", ex:"Pardon, je n'ai pas compris.",           ex_tr:"Hakɛtigiya, n ma a faamu."},
+{word:"désolé",        syl:["dé","so","lé"],         ph:"/de.zɔ.le/",       tr:"Hakɛtigiya (fort)",            trfr:"désolé",                cat:"quotidien", ex:"Je suis désolé pour le retard.",         ex_tr:"Hakɛtigiya ka segin kɔ."},
+{word:"eau",           syl:["eau"],                  ph:"/o/",              tr:"Jii",                          trfr:"eau",                   cat:"quotidien", ex:"Un verre d'eau, s'il vous plaît.",       ex_tr:"Jii vɛrɛ, mɛnni kɛ."},
+{word:"pain",          syl:["pain"],                 ph:"/pɛ̃/",             tr:"Burudi",                       trfr:"pain",                  cat:"quotidien", ex:"Une baguette de pain.",                  ex_tr:"Burudi kelen."},
+{word:"argent",        syl:["ar","gent"],            ph:"/aʁ.ʒɑ̃/",          tr:"Wari",                         trfr:"argent",                cat:"quotidien", ex:"Je n'ai pas assez d'argent.",            ex_tr:"N ma wari sɔrɔ ka dɔgɔya."},
+{word:"téléphone",     syl:["té","lé","phone"],      ph:"/te.le.fɔn/",      tr:"Telefɔni",                     trfr:"téléphone",             cat:"quotidien", ex:"Mon téléphone est en panne.",            ex_tr:"N ka telefɔni tɛ baara kɛ."},
+{word:"appartement",   syl:["ap","par","te","ment"], ph:"/a.paʁ.tə.mɑ̃/",   tr:"So dɔ so bɛɛ kɔnɔ",            trfr:"appartement",           cat:"quotidien", ex:"Mon appartement est au 3ème étage.",     ex_tr:"N ka so bɛ siratigiya sabanan na."},
+{word:"loyer",         syl:["loy","er"],             ph:"/lwa.je/",         tr:"So sara kalo kelen kelen",     trfr:"loyer",                 cat:"quotidien", ex:"Mon loyer est de 600 euros.",            ex_tr:"N ka so sara ye wari kɛmɛ wɔɔrɔ ye."},
+{word:"clé",           syl:["clé"],                  ph:"/kle/",            tr:"Lafɛrɛ",                       trfr:"clé",                   cat:"quotidien", ex:"J'ai oublié ma clé.",                    ex_tr:"N tun ye n ka lafɛrɛ fili."},
+{word:"voisin",        syl:["voi","sin"],            ph:"/vwa.zɛ̃/",         tr:"Dulɔkɔ",                       trfr:"voisin",                cat:"quotidien", ex:"Mon voisin est sympa.",                  ex_tr:"N ka dulɔkɔ ka nɔgɔya."},
+{word:"supermarché",   syl:["su","per","mar","ché"], ph:"/sy.pɛʁ.maʁ.ʃe/",  tr:"Dugu-jatigiya bɔnba",          trfr:"supermarché",           cat:"quotidien", ex:"Je vais au supermarché.",                ex_tr:"Ne bɛ taa dugu-jatigiya la."},
+
+// ─── ADMINISTRATIF ──────────────────────────
+{word:"mairie",        syl:["mai","rie"],            ph:"/mɛ.ʁi/",          tr:"Dugu kuntigiya so",            trfr:"mairie",                cat:"admin", ex:"Vous devez aller à la mairie.",          ex_tr:"I ka kan ka taa dugu kuntigiya so."},
+{word:"préfecture",    syl:["pré","fec","ture"],     ph:"/pʁe.fɛk.tyʁ/",   tr:"Foroba so (gouvernement)",     trfr:"préfecture",            cat:"admin", ex:"La préfecture traite les titres de séjour.", ex_tr:"Foroba so bɛ taama kaarata kɛ."},
+{word:"formulaire",    syl:["for","mu","laire"],     ph:"/fɔʁ.my.lɛʁ/",    tr:"Sɛbɛn dɔgɔyali",              trfr:"formulaire",            cat:"admin", ex:"Remplissez ce formulaire.",               ex_tr:"Sɛbɛn nin dɔgɔya."},
+{word:"justificatif",  syl:["jus","ti","fi","ca","tif"],ph:"/ʒys.ti.fi.ka.tif/",tr:"Sɛbɛn sɔrɔla",           trfr:"justificatif",          cat:"admin", ex:"Apportez un justificatif de domicile.",  ex_tr:"So sigiko sɛbɛn na."},
+{word:"signature",     syl:["si","gna","ture"],      ph:"/si.ɲa.tyʁ/",      tr:"Boli (signer)",                trfr:"signature",             cat:"admin", ex:"Signez en bas du document.",             ex_tr:"Sɛbɛn tɛmɛ boli."},
+{word:"rendez-vous",   syl:["ren","dez","-","vous"], ph:"/ʁɑ̃.de.vu/",       tr:"Kɛnɛ segin yɔrɔ",             trfr:"rendez-vous",           cat:"admin", ex:"J'ai un rendez-vous vendredi.",          ex_tr:"N bɛ kɛnɛ segin Jɔ."},
+{word:"carte de séjour",syl:["carte","de","sé","jour"],ph:"/kaʁt.də.se.ʒuʁ/",tr:"Taama kaarata",             trfr:"carte de séjour",       cat:"admin", ex:"Ma carte de séjour expire en juin.",     ex_tr:"N ka taama kaarata bɛ ban Juwiɲ."},
+{word:"récépissé",     syl:["ré","cé","pis","sé"],   ph:"/ʁe.se.pi.se/",    tr:"Sɔrɔ sɛbɛn (reçu provisoire)",trfr:"récépissé",             cat:"admin", ex:"Voici votre récépissé.",                 ex_tr:"Nin ye i ka sɔrɔ sɛbɛn ye."},
+{word:"convocation",   syl:["con","vo","ca","tion"],  ph:"/kɔ̃.vɔ.ka.sjɔ̃/", tr:"Wɔlɔ (lettre pour venir)",    trfr:"convocation",           cat:"admin", ex:"J'ai reçu une convocation.",             ex_tr:"Ne ye wɔlɔ sɔrɔ."},
+{word:"passeport",     syl:["passe","port"],         ph:"/pas.pɔʁ/",        tr:"Taama sɛbɛn",                 trfr:"passeport",             cat:"admin", ex:"Mon passeport est valide.",              ex_tr:"N ka taama sɛbɛn bɛ baara kɛ."},
+{word:"photocopie",    syl:["pho","to","co","pie"],   ph:"/fɔ.tɔ.kɔ.pi/",   tr:"Sɛbɛn kopi",                  trfr:"photocopie",            cat:"admin", ex:"Apportez deux photocopies.",             ex_tr:"Kopiw fila na."},
+{word:"adresse",       syl:["a","dresse"],           ph:"/a.dʁɛs/",         tr:"So sigiko",                   trfr:"adresse",               cat:"admin", ex:"Quelle est votre adresse ?",             ex_tr:"I ka so sigiko ye mun ye ?"},
+{word:"numéro de sécu",syl:["nu","mé","ro","sé","cu"],ph:"/ny.me.ʁo.se.ky/",tr:"Kɛnɛya nimɔrɔ",             trfr:"numéro de sécurité sociale", cat:"admin", ex:"Votre numéro de sécu est sur votre carte Vitale.", ex_tr:"Kɛnɛya nimɔrɔ bɛ i ka Vitale kaarata kan."},
+{word:"CAF",           syl:["C","A","F"],            ph:"/se.a.ɛf/",        tr:"So dɛmɛ (aide logement)",     trfr:"CAF (aide logement/famille)", cat:"admin", ex:"Je touche une aide de la CAF.",         ex_tr:"CAF bɛ ne dɛmɛ so kama."},
+{word:"Pôle emploi",   syl:["Pôle","em","ploi"],     ph:"/pol.ɑ̃.plwa/",    tr:"Baara ɲinina so",              trfr:"Pôle emploi / France Travail", cat:"admin", ex:"Je suis inscrit à Pôle emploi.",        ex_tr:"Ne tɔgɔ sɛbɛnna Pôle emploi."},
+{word:"impôts",        syl:["im","pôts"],            ph:"/ɛ̃.po/",           tr:"Gɛrɛfɛ sara (taxe)",          trfr:"impôts",                cat:"admin", ex:"Je dois déclarer mes impôts.",           ex_tr:"N ka kan ka n ka wari fɔ impôts."},
+{word:"allocations",   syl:["al","lo","ca","tions"], ph:"/a.lɔ.ka.sjɔ̃/",   tr:"Dɛmɛ warili (aide financière)",trfr:"allocations",           cat:"admin", ex:"Je reçois des allocations familiales.",  ex_tr:"N bɛ denbaya dɛmɛ sɔrɔ."},
+
+// ─── SANTÉ ──────────────────────────────────
+{word:"médecin",       syl:["mé","de","cin"],        ph:"/med.sɛ̃/",         tr:"Dɔgɔtɔrɔ",                    trfr:"médecin",               cat:"sante", ex:"J'ai rendez-vous chez le médecin.",     ex_tr:"N bɛ kɛnɛ segin dɔgɔtɔrɔ fɛ."},
+{word:"pharmacie",     syl:["phar","ma","cie"],      ph:"/faʁ.ma.si/",      tr:"Dɔgɔtɔrɔ fura so",            trfr:"pharmacie",             cat:"sante", ex:"La pharmacie est en face.",             ex_tr:"Dɔgɔtɔrɔ fura so bɛ kɔ fɛ."},
+{word:"ordonnance",    syl:["or","don","nance"],     ph:"/ɔʁ.dɔ.nɑ̃s/",     tr:"Dɔgɔtɔrɔ sɛbɛn (pour fura)", trfr:"ordonnance",            cat:"sante", ex:"Voici mon ordonnance.",                 ex_tr:"Nin ye n ka dɔgɔtɔrɔ sɛbɛn ye."},
+{word:"urgences",      syl:["ur","gences"],          ph:"/yʁ.ʒɑ̃s/",        tr:"Fɛn gɛlɛn so",                trfr:"urgences",              cat:"sante", ex:"Allons aux urgences.",                  ex_tr:"An ka taa kɛnɛya fɛn gɛlɛn so."},
+{word:"douleur",       syl:["dou","leur"],           ph:"/du.lœʁ/",         tr:"Dimi / bana",                  trfr:"douleur",               cat:"sante", ex:"J'ai une douleur dans le dos.",         ex_tr:"N kɔ bɛ ne dimi."},
+{word:"fièvre",        syl:["fièvre"],               ph:"/fjɛvʁ/",          tr:"Finifini",                     trfr:"fièvre",                cat:"sante", ex:"J'ai de la fièvre.",                    ex_tr:"Finifini bɛ ne kɔrɔ."},
+{word:"assurance",     syl:["as","su","rance"],      ph:"/a.sy.ʁɑ̃s/",      tr:"Sariya lakana",                trfr:"assurance maladie",     cat:"sante", ex:"Avez-vous une assurance maladie ?",     ex_tr:"I bɛ sariya lakana kɛnɛya la wa ?"},
+{word:"vaccin",        syl:["vac","cin"],            ph:"/vak.sɛ̃/",         tr:"Fura kɛ (piqûre préventive)", trfr:"vaccin",                cat:"sante", ex:"Je dois me faire vacciner.",            ex_tr:"Ne ka kan ka fura kɛ."},
+
+// ─── TRANSPORT ──────────────────────────────
+{word:"billet",        syl:["bil","let"],            ph:"/bi.jɛ/",          tr:"Kaarata (pour voyager)",       trfr:"billet",                cat:"transport", ex:"Un billet pour Paris.",              ex_tr:"Kaarata kelen Paris kama."},
+{word:"horaire",       syl:["ho","raire"],           ph:"/ɔ.ʁɛʁ/",          tr:"Lɛrɛ sɛbɛn",                  trfr:"horaire",               cat:"transport", ex:"Regardez les horaires.",             ex_tr:"Lɛrɛ sɛbɛn lajɛ."},
+{word:"retard",        syl:["re","tard"],            ph:"/ʁə.taʁ/",         tr:"Segin kɔ",                     trfr:"retard",                cat:"transport", ex:"Le train a du retard.",              ex_tr:"Gari bɛ segin kɔ."},
+{word:"correspondance",syl:["cor","res","pon","dance"],ph:"/kɔ.ʁɛs.pɔ̃.dɑ̃s/",tr:"Gari yɛlɛmali",            trfr:"correspondance",        cat:"transport", ex:"Changez à Lyon.",                    ex_tr:"I ka gari yɛlɛma Lyon."},
+{word:"quai",          syl:["quai"],                 ph:"/kɛ/",             tr:"Gari sigiyɔrɔ",                trfr:"quai",                  cat:"transport", ex:"Le train est quai 3.",               ex_tr:"Gari bɛ kɛfɛ saba."},
+{word:"métro",         syl:["mé","tro"],             ph:"/me.tʁo/",         tr:"Duguma gari",                  trfr:"métro",                 cat:"transport", ex:"Je prends le métro.",                ex_tr:"Ne bɛ duguma gari ta."},
+{word:"arrêt",         syl:["ar","rêt"],             ph:"/a.ʁɛ/",           tr:"Jɔyɔrɔ",                      trfr:"arrêt de bus",          cat:"transport", ex:"C'est le prochain arrêt.",           ex_tr:"Nin ye jɔyɔrɔ nata ye."},
+{word:"composteur",    syl:["com","pos","teur"],     ph:"/kɔ̃.pɔs.tœʁ/",    tr:"Kaarata kalan machine",        trfr:"composteur (valider)",  cat:"transport", ex:"Validez votre billet.",              ex_tr:"I kaarata kalan."},
+
+// ─── TRAVAIL ────────────────────────────────
+{word:"contrat",       syl:["con","trat"],           ph:"/kɔ̃.tʁa/",        tr:"Sɛbɛn (accord baara)",         trfr:"contrat",               cat:"travail", ex:"J'ai signé mon contrat.",            ex_tr:"N ye n ka sɛbɛn sɛbɛn."},
+{word:"salaire",       syl:["sa","laire"],           ph:"/sa.lɛʁ/",         tr:"Baara sara",                   trfr:"salaire",               cat:"travail", ex:"Mon salaire est versé le 25.",       ex_tr:"N ka baara sara bɛ na tile 25."},
+{word:"collègue",      syl:["col","lègue"],          ph:"/kɔ.lɛɡ/",         tr:"Baara tɔ",                     trfr:"collègue",              cat:"travail", ex:"Mes collègues sont sympas.",         ex_tr:"N ka baara tɔw ka nɔgɔya."},
+{word:"fiche de paie", syl:["fiche","de","paie"],    ph:"/fiʃ.də.pɛ/",      tr:"Wari sɛbɛn",                   trfr:"fiche de paie",         cat:"travail", ex:"Gardez vos fiches de paie.",         ex_tr:"I ka wari sɛbɛnw mara."},
+{word:"entretien",     syl:["en","tre","tien"],      ph:"/ɑ̃.tʁə.tjɛ̃/",     tr:"Kuma kɛli (embauche)",         trfr:"entretien d'embauche",  cat:"travail", ex:"J'ai un entretien demain.",          ex_tr:"N bɛ kuma kɛli sini."},
+{word:"congés payés",  syl:["con","gés","pa","yés"], ph:"/kɔ̃.ʒe.pe.je/",   tr:"Bɔliw sarala",                 trfr:"congés payés",          cat:"travail", ex:"J'ai 5 semaines de congés.",         ex_tr:"N bɛ bɔliw saba ye kalo kɔnɔ."},
+{word:"candidature",   syl:["can","di","da","ture"], ph:"/kɑ̃.di.da.tyʁ/",  tr:"Baara ɲinina",                 trfr:"candidature",           cat:"travail", ex:"J'envoie ma candidature.",           ex_tr:"Ne bɛ n ka baara ɲinina ci."},
+
+// ─── SOCIAL ─────────────────────────────────
+{word:"enchanté",      syl:["en","chan","té"],        ph:"/ɑ̃.ʃɑ̃.te/",       tr:"N nisɔndiya i ye",             trfr:"enchanté",              cat:"social", ex:"Enchanté de vous rencontrer !",      ex_tr:"N nisɔndiya i ye !"},
+{word:"bienvenu",      syl:["bien","ve","nu"],        ph:"/bjɛ̃.və.ny/",      tr:"I bɛ na di",                   trfr:"bienvenu",              cat:"social", ex:"Bienvenu dans notre équipe.",        ex_tr:"I bɛ na di an ka jɛkulu."},
+{word:"au revoir",     syl:["au","re","voir"],        ph:"/o.ʁə.vwaʁ/",      tr:"Kana tɔ",                      trfr:"au revoir",             cat:"social", ex:"Au revoir, à demain !",              ex_tr:"Kana tɔ, sini !"},
+{word:"félicitations", syl:["fé","li","ci","ta","tions"],ph:"/fe.li.si.ta.sjɔ̃/",tr:"Aw ni kɛ !",             trfr:"félicitations",         cat:"social", ex:"Félicitations !",                    ex_tr:"Aw ni kɛ !"},
+{word:"avec plaisir",  syl:["a","vec","plai","sir"],  ph:"/a.vɛk.plɛ.ziʁ/",  tr:"Ne nisɔndiya",                 trfr:"avec plaisir",          cat:"social", ex:"Avec plaisir !",                     ex_tr:"Ne nisɔndiya !"},
+
+// ─── PERMIS DE CONDUIRE ─────────────────────
+{word:"code de la route",syl:["code","de","la","route"],ph:"/kɔd.də.la.ʁut/",tr:"Sira sariyaw kalanden",       trfr:"code de la route",      cat:"permis", ex:"Je prépare mon code de la route.",   ex_tr:"Ne bɛ sira sariyaw kalan."},
+{word:"conduite",      syl:["con","duite"],           ph:"/kɔ̃.dɥit/",       tr:"Mɔbili tɔn (conduire)",       trfr:"conduite",              cat:"permis", ex:"La conduite accompagnée est possible.",ex_tr:"Mɔbili tɔn ni cɛ dɔ tɛ gɛlɛn."},
+{word:"permis",        syl:["per","mis"],             ph:"/pɛʁ.mi/",         tr:"Sira kaarata (licence)",       trfr:"permis de conduire",    cat:"permis", ex:"J'ai obtenu mon permis.",            ex_tr:"Ne ye n ka sira kaarata sɔrɔ."},
+{word:"moniteur",      syl:["mo","ni","teur"],        ph:"/mɔ.ni.tœʁ/",     tr:"Mɔbili kalanden (instructeur)",trfr:"moniteur d'auto-école", cat:"permis", ex:"Mon moniteur est patient.",          ex_tr:"N ka kalanden bɛ sabati."},
+{word:"auto-école",    syl:["au","to","-","é","cole"],ph:"/o.to.e.kɔl/",    tr:"Mɔbili kalanden so",           trfr:"auto-école",            cat:"permis", ex:"Je suis inscrit à l'auto-école.",    ex_tr:"N tɔgɔ sɛbɛnna mɔbili kalanden so."},
+{word:"leçon de conduite",syl:["le","çon","de","con","duite"],ph:"/lə.sɔ̃.də.kɔ̃.dɥit/",tr:"Mɔbili kalanden waati",trfr:"leçon de conduite",  cat:"permis", ex:"J'ai une leçon demain.",            ex_tr:"N bɛ mɔbili kalanden sini."},
+{word:"examen",        syl:["e","xa","men"],          ph:"/ɛɡ.za.mɛ̃/",      tr:"Ɲɛnabu bɔnba",                trfr:"examen",                cat:"permis", ex:"Mon examen est le 15 juin.",         ex_tr:"N ka ɲɛnabu ye tile 15 Juwiɲ."},
+{word:"priorité",      syl:["pri","o","ri","té"],     ph:"/pʁi.ɔ.ʁi.te/",   tr:"Ɲɛ sɔrɔ (passer en premier)", trfr:"priorité",              cat:"permis", ex:"Priorité à droite.",                ex_tr:"I ka ɲɛ di i bolo kɔnɔ fɛ mɔgɔ ma."},
+{word:"cédez le passage",syl:["cé","dez","le","pas","sage"],ph:"/se.de.lə.pa.saʒ/",tr:"Mɔgɔ tɔw ɲɛ di (laisse passer)",trfr:"cédez le passage", cat:"permis", ex:"Cédez le passage au carrefour.",    ex_tr:"Sira lajɛ yɔrɔ la mɔgɔ tɔw ɲɛ di."},
+{word:"stop",          syl:["stop"],                 ph:"/stɔp/",           tr:"Jɔ (arrêter complètement)",   trfr:"panneau STOP",          cat:"permis", ex:"Au stop, je dois m'arrêter.",        ex_tr:"STOP kɛ loon, ne ka jɔ sɔsɔ."},
+{word:"feux tricolores",syl:["feux","tri","co","lores"],ph:"/fø.tʁi.kɔ.lɔʁ/",tr:"Kulɛn, jɛnɲɛ, kɔnɔ (feux)",trfr:"feux tricolores",        cat:"permis", ex:"Les feux passent au vert.",         ex_tr:"Kulɛn sɛmɛ bɛ yɛlɛma."},
+{word:"rétroviseur",   syl:["ré","tro","vi","seur"],  ph:"/ʁe.tʁɔ.vi.zœʁ/", tr:"Kɔfɛ lajɛ gilasi",            trfr:"rétroviseur",           cat:"permis", ex:"Vérifiez vos rétroviseurs.",        ex_tr:"I ka kɔfɛ lajɛ gilassiw lajɛ."},
+{word:"clignotant",    syl:["cli","gno","tant"],      ph:"/kliɲ.ɔ.tɑ̃/",     tr:"Yɛlɛma sɛbɛ (indicateur)",   trfr:"clignotant",            cat:"permis", ex:"Mettez le clignotant avant de tourner.",ex_tr:"I ka yɛlɛma sɛbɛ kɛ sira yɛlɛma sɔrɔ."},
+{word:"créneau",       syl:["cré","neau"],            ph:"/kʁe.no/",         tr:"So dɔnna gɛlɛn yɔrɔ",        trfr:"créneau (parking)",     cat:"permis", ex:"Je dois faire un créneau.",         ex_tr:"Ne ka kan ka mɔbili don dɔnna."},
+{word:"demi-tour",     syl:["de","mi","-","tour"],    ph:"/də.mi.tuʁ/",      tr:"Kɔ segin (faire demi-tour)",  trfr:"demi-tour",             cat:"permis", ex:"Faites un demi-tour.",              ex_tr:"I ka segin kɔ."},
+{word:"excès de vitesse",syl:["ex","cès","de","vi","tesse"],ph:"/ɛk.sɛ.də.vi.tɛs/",tr:"Ka joona kosɛbɛ (trop vite)",trfr:"excès de vitesse",  cat:"permis", ex:"L'excès de vitesse est dangereux.", ex_tr:"Ka joona kosɛbɛ bɛ kan kɛnɛ bɔ."},
+{word:"ceinture de sécurité",syl:["cein","ture","sé","cu","ri","té"],ph:"/sɛ̃.tyʁ.se.ky.ʁi.te/",tr:"Lakana sanya (ceinture)",trfr:"ceinture de sécurité",cat:"permis", ex:"La ceinture est obligatoire.",      ex_tr:"Lakana sanya ka wajibi."},
+{word:"alcool au volant",syl:["al","cool","au","vo","lant"],ph:"/al.kɔl.o.vɔ.lɑ̃/",tr:"Dolo ni mɔbili — tiɲɛ !",trfr:"alcool au volant",      cat:"permis", ex:"L'alcool au volant est interdit.",  ex_tr:"Dolo ni mɔbili ye tiɲɛ !"},
+{word:"limitation de vitesse",syl:["li","mi","ta","tion","vi","tesse"],ph:"/li.mi.ta.sjɔ̃.vi.tɛs/",tr:"Joona ɲɛfɛ (vitesse max)",trfr:"limitation de vitesse",cat:"permis", ex:"La limitation est à 50 km/h en ville.",ex_tr:"Dugu kɔnɔ joona ye 50 ye."},
+{word:"panneau",       syl:["pan","neau"],            ph:"/pa.no/",          tr:"Sira sɛbɛ (panneau routier)", trfr:"panneau de signalisation",cat:"permis",ex:"Respectez les panneaux.",           ex_tr:"Sira sɛbɛw bato."},
+{word:"rond-point",    syl:["rond","-","point"],      ph:"/ʁɔ̃.pwɛ̃/",        tr:"Yiriwa sira (giratoire)",     trfr:"rond-point",            cat:"permis", ex:"Cédez à l'entrée du rond-point.",   ex_tr:"Yiriwa sira don yɔrɔ la mɔgɔ tɔw ɲɛ di."},
+{word:"voie",          syl:["voie"],                  ph:"/vwa/",            tr:"Sira fila (file de route)",   trfr:"voie (de circulation)", cat:"permis", ex:"Restez dans votre voie.",           ex_tr:"I ka sigi i ka sira la."},
+{word:"dépassement",   syl:["dé","passe","ment"],     ph:"/de.pas.mɑ̃/",     tr:"Tɛmɛ ka jɔ (doubler)",       trfr:"dépassement",           cat:"permis", ex:"Le dépassement est interdit ici.",   ex_tr:"Tɛmɛ ka jɔ tɛ sɔn yen."},
+];
+
+const PHRASES = [
+// quotidien
+{text:"Je voudrais un billet pour Lyon, s'il vous plaît.", trans:"Ne bɛ kaarata dɔ fɛ Lyon kama, mɛnni kɛ.", cat:"transport",
+ words:{"voudrais":{ph:"/vu.dʁɛ/",def:"je veux (poli)",mk:"ne fɛ"},"billet":{ph:"/bi.jɛ/",def:"ticket transport",mk:"kaarata"},"s'il vous plaît":{ph:"/sil.vu.plɛ/",def:"formule polie",mk:"mɛnni kɛ"}}},
+{text:"Excusez-moi, où se trouve la pharmacie ?", trans:"Hakɛtigiya, dɔgɔtɔrɔ fura so bɛ min ?", cat:"sante",
+ words:{"Excusez-moi":{ph:"/ɛk.sky.ze.mwa/",def:"excuse-moi (poli)",mk:"hakɛtigiya"},"où":{ph:"/u/",def:"dans quel endroit",mk:"min"},"pharmacie":{ph:"/faʁ.ma.si/",def:"pharmacie",mk:"dɔgɔtɔrɔ fura so"}}},
+{text:"J'ai besoin d'aide pour remplir ce formulaire.", trans:"Ne bɛ dɛmɛ ɲini ka sɛbɛn nin dɔgɔya.", cat:"admin",
+ words:{"besoin":{ph:"/bə.zwɛ̃/",def:"avoir besoin de",mk:"bɛ ɲini"},"aide":{ph:"/ɛd/",def:"assistance",mk:"dɛmɛ"},"remplir":{ph:"/ʁɑ̃.pliʁ/",def:"écrire dans les cases",mk:"dɔgɔya"},"formulaire":{ph:"/fɔʁ.my.lɛʁ/",def:"document officiel",mk:"sɛbɛn"}}},
+{text:"Le médecin peut me recevoir demain matin ?", trans:"Dɔgɔtɔrɔ bɛ se ka n sɔrɔ sini sɔgɔma wa ?", cat:"sante",
+ words:{"médecin":{ph:"/med.sɛ̃/",def:"docteur",mk:"dɔgɔtɔrɔ"},"demain":{ph:"/də.mɛ̃/",def:"le jour suivant",mk:"sini"},"matin":{ph:"/ma.tɛ̃/",def:"début de journée",mk:"sɔgɔma"}}},
+{text:"Je n'ai pas compris, pouvez-vous répéter ?", trans:"Ne ma a faamu, aw bɛ se ka kuma tɔ wa ?", cat:"social",
+ words:{"compris":{ph:"/kɔ̃.pʁi/",def:"saisi / compris",mk:"faamu"},"répéter":{ph:"/ʁe.pe.te/",def:"dire encore une fois",mk:"kuma tɔ"},"pouvez-vous":{ph:"/pu.ve.vu/",def:"êtes-vous capable (poli)",mk:"aw bɛ se"}}},
+{text:"Ma carte de séjour expire dans trois mois.", trans:"N ka taama kaarata bɛ ban kalo saba kɔ.", cat:"admin",
+ words:{"carte de séjour":{ph:"/kaʁt.də.se.ʒuʁ/",def:"permis de résidence",mk:"taama kaarata"},"expire":{ph:"/ɛk.spiʁ/",def:"arrive à la fin",mk:"bɛ ban"},"trois":{ph:"/tʁwa/",def:"3",mk:"saba"},"mois":{ph:"/mwa/",def:"période mensuelle",mk:"kalo"}}},
+{text:"Je cherche du travail dans la restauration.", trans:"Ne bɛ baara ɲini dumuni so kɔnɔ.", cat:"travail",
+ words:{"cherche":{ph:"/ʃɛʁʃ/",def:"je recherche",mk:"bɛ ɲini"},"travail":{ph:"/tʁa.vaj/",def:"emploi",mk:"baara"},"restauration":{ph:"/ʁɛs.tɔ.ʁa.sjɔ̃/",def:"secteur restaurant",mk:"dumuni so"}}},
+{text:"Je voudrais ouvrir un compte bancaire.", trans:"Ne bɛ banki compte yɛlɛn fɛ.", cat:"admin",
+ words:{"ouvrir":{ph:"/u.vʁiʁ/",def:"créer",mk:"yɛlɛn"},"compte":{ph:"/kɔ̃t/",def:"compte en banque",mk:"compte"},"bancaire":{ph:"/bɑ̃.kɛʁ/",def:"relatif à la banque",mk:"banki"}}},
+{text:"Est-ce que vous acceptez la carte bancaire ?", trans:"Aw bɛ banki kaarata sɔrɔ wa ?", cat:"quotidien",
+ words:{"acceptez":{ph:"/ak.sɛp.te/",def:"prenez / recevez",mk:"sɔrɔ"},"carte bancaire":{ph:"/kaʁt.bɑ̃.kɛʁ/",def:"carte de paiement",mk:"banki kaarata"}}},
+// PERMIS
+{text:"Je dois respecter la limitation de vitesse.", trans:"Ne ka kan ka joona ɲɛfɛ bato.", cat:"permis",
+ words:{"respecter":{ph:"/ʁɛs.pɛk.te/",def:"obéir / suivre la règle",mk:"bato"},"limitation":{ph:"/li.mi.ta.sjɔ̃/",def:"borne maximum",mk:"ɲɛfɛ"},"vitesse":{ph:"/vi.tɛs/",def:"rapidité",mk:"joona"}}},
+{text:"Au feu rouge, je m'arrête complètement.", trans:"Fani kulɛn kɛ loon, ne jɔ sɔsɔ.", cat:"permis",
+ words:{"feu rouge":{ph:"/fø.ʁuʒ/",def:"signal rouge = arrêt obligatoire",mk:"fani kulɛn"},"m'arrête":{ph:"/ma.ʁɛt/",def:"je stoppe",mk:"ne jɔ"},"complètement":{ph:"/kɔ̃.plɛt.mɑ̃/",def:"totalement / entièrement",mk:"sɔsɔ"}}},
+{text:"La ceinture de sécurité est obligatoire pour tous.", trans:"Lakana sanya ye wajibi mɔgɔ bɛɛ kama.", cat:"permis",
+ words:{"ceinture":{ph:"/sɛ̃.tyʁ/",def:"sangle de sécurité",mk:"lakana sanya"},"obligatoire":{ph:"/ɔ.bli.ɡa.twaʁ/",def:"que l'on doit faire",mk:"wajibi"},"tous":{ph:"/tus/",def:"tout le monde",mk:"mɔgɔ bɛɛ"}}},
+{text:"Je dois vérifier mes rétroviseurs avant de démarrer.", trans:"Ne ka kan ka n ka kɔfɛ gilassiw lajɛ ɲɛfɛ.", cat:"permis",
+ words:{"vérifier":{ph:"/ve.ʁi.fje/",def:"contrôler / regarder",mk:"lajɛ"},"rétroviseurs":{ph:"/ʁe.tʁɔ.vi.zœʁ/",def:"miroirs qui montrent l'arrière",mk:"kɔfɛ gilassiw"},"démarrer":{ph:"/de.ma.ʁe/",def:"partir / commencer à rouler",mk:"taa"}}},
+{text:"Mon examen du code est dans deux semaines.", trans:"N ka code ɲɛnabu bɛ sɛmɛ filanan na.", cat:"permis",
+ words:{"examen":{ph:"/ɛɡ.za.mɛ̃/",def:"test officiel",mk:"ɲɛnabu"},"code":{ph:"/kɔd/",def:"code de la route",mk:"sira sariyaw"},"deux semaines":{ph:"/dø.sə.mɛn/",def:"14 jours",mk:"sɛmɛ fila"}}},
+{text:"Au stop, l'arrêt est total et obligatoire.", trans:"STOP kɛ loon, jɔli ye wajibi.", cat:"permis",
+ words:{"stop":{ph:"/stɔp/",def:"panneau = arrêt total",mk:"jɔ sigilen"},"arrêt":{ph:"/a.ʁɛ/",def:"action de s'arrêter",mk:"jɔli"},"obligatoire":{ph:"/ɔ.bli.ɡa.twaʁ/",def:"on doit le faire",mk:"wajibi"}}},
+// ADMIN renforcé
+{text:"Je suis inscrit à Pôle emploi depuis un mois.", trans:"N tɔgɔ sɛbɛnna Pôle emploi kalo kelen kɔ.", cat:"admin",
+ words:{"inscrit":{ph:"/ɛ̃s.kʁi/",def:"enregistré / enrôlé",mk:"tɔgɔ sɛbɛnna"},"Pôle emploi":{ph:"/pol.ɑ̃.plwa/",def:"agence pour l'emploi",mk:"baara ɲinina so"},"depuis":{ph:"/də.pɥi/",def:"à partir de",mk:"kɔ"}}},
+{text:"Je dois renouveler ma carte de séjour.", trans:"Ne ka kan ka n ka taama kaarata kura kɛ.", cat:"admin",
+ words:{"renouveler":{ph:"/ʁə.nu.və.le/",def:"refaire / mettre à jour",mk:"kura kɛ"},"carte de séjour":{ph:"/kaʁt.də.se.ʒuʁ/",def:"titre de résidence",mk:"taama kaarata"}}},
+];
+
+const QUIZ_Q = [
+{q:"Code de la route — I ka miiri mun na ?",qfr:"Que signifie « code de la route » ?",choices:["Sira sariyaw kalanden","Mɔbili sara","Kaarata bɛ","Sira nimɔrɔ"],ans:0,cat:"permis"},
+{q:"Feux tricolores — kulɛn kɛ loon, mun kɛ ?",qfr:"Au feu rouge, que fait-on ?",choices:["Joona","Jɔ sɔsɔ (arrêt total)","Yɛlɛma sira","Tɛmɛ"],ans:1,cat:"permis"},
+{q:"Comment dit-on « lakana sanya » en français ?",qfr:"Comment dit-on « ceinture de sécurité » ?",choices:["clignotant","rétroviseur","ceinture de sécurité","permis"],ans:2,cat:"permis"},
+{q:"Mairie — I ka miiri mun na ?",qfr:"Que signifie « mairie » ?",choices:["Dɔgɔtɔrɔ fura so","Burudi da","Dugu kuntigiya so","Foroba so"],ans:2,cat:"admin"},
+{q:"Comment dit-on « baara sara » en français ?",qfr:"Que signifie « salaire » ?",choices:["contrat","congés payés","collègue","salaire"],ans:3,cat:"travail"},
+{q:"Panneau STOP — mun kɛ ?",qfr:"Que fait-on à un panneau STOP ?",choices:["Ralentir","Klaxonner","Jɔ sɔsɔ (arrêt total)","Doubler"],ans:2,cat:"permis"},
+{q:"Récépissé — I ka miiri mun na ?",qfr:"Que signifie « récépissé » ?",choices:["Kaarata (carte)","Sɔrɔ sɛbɛn (reçu)","Wɔlɔ (convocation)","Sɛbɛn kopi"],ans:1,cat:"admin"},
+{q:"Comment dit-on « moniteur » (auto-école) ?",qfr:"Comment dit-on « moniteur » ?",choices:["examinateur","conducteur","moniteur","passager"],ans:2,cat:"permis"},
+{q:"Clignotant — ka kɛ cogo di ?",qfr:"À quoi sert le clignotant ?",choices:["Ka yɛlɛma sira fɔ","Ka jɔ","Ka joona","Ka kulɛn"],ans:0,cat:"permis"},
+{q:"CAF — I ka miiri mun na ?",qfr:"Que signifie « CAF » ?",choices:["Baara ɲinina so","Kɛnɛya so","So dɛmɛ (aide logement)","Foroba so"],ans:2,cat:"admin"},
+{q:"Comment dit-on « Finifini » en français ?",qfr:"Comment dit-on « fièvre » ?",choices:["douleur","fièvre","allergie","vaccin"],ans:1,cat:"sante"},
+{q:"Limitation vitesse ville — joli ?",qfr:"Quelle est la vitesse en ville ?",choices:["30 km/h","50 km/h","70 km/h","90 km/h"],ans:1,cat:"permis"},
+{q:"Comment dit-on « Dɔgɔtɔrɔ sɛbɛn » en français ?",qfr:"Que signifie « ordonnance » ?",choices:["assurance","vaccin","ordonnance","urgences"],ans:2,cat:"sante"},
+{q:"Pôle emploi — ko di ?",qfr:"À quoi sert Pôle emploi ?",choices:["Kɛnɛya","Baara ɲinina","So sara","Mɔbili tɔn"],ans:1,cat:"admin"},
+{q:"Dépassement interdit — ko di ?",qfr:"Que signifie « dépassement interdit » ?",choices:["Ka joona","Ka tɛmɛ sɔn tɛ","Ka jɔ","Ka yɛlɛma sira"],ans:1,cat:"permis"},
+{q:"Allocations — I ka miiri mun na ?",qfr:"Que signifie « allocations » ?",choices:["Impôts (taxe)","Wari sara","Dɛmɛ warili (aide)","Baara sara"],ans:2,cat:"admin"},
+{q:"Comment dit-on « Wɔlɔ » (lettre officielle) ?",qfr:"Comment dit-on « convocation » ?",choices:["justificatif","récépissé","convocation","passeport"],ans:2,cat:"admin"},
+{q:"Créneau — ko di ?",qfr:"Qu'est-ce qu'un créneau ?",choices:["Tɛmɛ sira","So dɔnna gɛlɛn yɔrɔ (se garer)","Demi-tour","Joona"],ans:1,cat:"permis"},
+{q:"Comment dit-on « baara ɲinina » en français ?",qfr:"Comment dit-on « candidature » ?",choices:["contrat","fiche de paie","candidature","entretien"],ans:2,cat:"travail"},
+{q:"Rond-point — I ka miiri mun na ?",qfr:"Que signifie « rond-point » ?",choices:["Sira tiɲɛ","Yiriwa sira (giratoire)","Jɔyɔrɔ","Voie"],ans:1,cat:"permis"},
+{q:"Numéro de sécu — ko di ?",qfr:"À quoi sert le numéro de sécu ?",choices:["Mɔbili kaarata","Kɛnɛya nimɔrɔ (ID santé)","So sigiko","Banki nimɔrɔ"],ans:1,cat:"admin"},
+{q:"Comment dit-on « Kana tɔ » en français ?",qfr:"Comment dit-on « au revoir » ?",choices:["merci","bonjour","s'il vous plaît","au revoir"],ans:3,cat:"social"},
+{q:"Impôts — I ka miiri mun na ?",qfr:"Que signifie « impôts » ?",choices:["Dɛmɛ warili","Gɛrɛfɛ sara (taxe)","Wari sɛbɛn","Baara sara"],ans:1,cat:"admin"},
+{q:"Comment dit-on « joona ɲɛfɛ » en français ?",qfr:"Que signifie « limitation de vitesse » ?",choices:["excès de vitesse","limitation de vitesse","panneau","voie"],ans:1,cat:"permis"},
+{q:"Entretien d'embauche — ko di ?",qfr:"Que signifie « entretien d'embauche » ?",choices:["Kuma kɛli baara la","Baara sara","Bɔliw sarala","Wari sɛbɛn"],ans:0,cat:"travail"},
+];
+
+const RECONS_PH = [
+{words:["Je","dois","respecter","les","panneaux","de","signalisation."],trans:"Ne ka kan ka sira sɛbɛw bato."},
+{words:["La","ceinture","de","sécurité","est","obligatoire."],trans:"Lakana sanya ye wajibi."},
+{words:["Mon","examen","de","code","est","vendredi."],trans:"N ka code ɲɛnabu ye Jɔ."},
+{words:["Au","feu","rouge,","je","m'arrête","complètement."],trans:"Fani kulɛn kɛ loon, ne jɔ sɔsɔ."},
+{words:["Je","voudrais","un","billet","pour","Lyon."],trans:"Ne bɛ kaarata dɔ fɛ Lyon kama."},
+{words:["Où","se","trouve","la","préfecture ?"],trans:"Foroba so bɛ min ?"},
+{words:["J'ai","besoin","d'aide","pour","remplir","ce","formulaire."],trans:"Ne bɛ dɛmɛ ɲini ka sɛbɛn nin dɔgɔya."},
+{words:["Je","dois","renouveler","ma","carte","de","séjour."],trans:"Ne ka kan ka n ka taama kaarata kura kɛ."},
+{words:["Le","dépassement","est","interdit","ici."],trans:"Tɛmɛ ka jɔ tɛ sɔn yen."},
+{words:["Je","m'appelle","Mamadou","et","j'habite","à","Paris."],trans:"N tɔgɔ ye Mamadou, ne bɛ sigi Paris."},
+{words:["Mon","salaire","est","versé","le","vingt-cinq."],trans:"N ka baara sara bɛ na tile 25."},
+{words:["Est-ce","que","vous","acceptez","la","carte","bancaire ?"],trans:"Aw bɛ banki kaarata sɔrɔ wa ?"},
+{words:["Je","suis","inscrit","à","Pôle","emploi."],trans:"N tɔgɔ sɛbɛnna Pôle emploi."},
+{words:["La","priorité","à","droite","est","importante."],trans:"Bolo kɔnɔ fɛ ɲɛ sɔrɔli ka ca."},
+];
+
+const PHON = [
+{l:"ou",s:"/u/",r:"Toujours /u/ — comme « jii »",mk:"Kɔni « u » malinké la.",ex:["bonjour","boulangerie","voudrais","conduire"]},
+{l:"eu/œu",s:"/ø/",r:"Son rond unique au français",mk:"Da yɔrɔ, kɔni u tɛ.",ex:["moniteur","rétroviseur","feu","conducteur"]},
+{l:"en/an",s:"/ɑ̃/",r:"Nasale — air par le nez",mk:"Kuma bɔ gɛrɛfɛ ani nifɛ.",ex:["clignotant","dépassement","enchanté","panneau"]},
+{l:"in/un",s:"/ɛ̃/",r:"Nasale aiguë",mk:"Kuma kɛsɛ gɛrɛfɛ.",ex:["permis","médecin","billet","examen"]},
+{l:"on",s:"/ɔ̃/",r:"Nasale labiale — lèvres rondes",mk:"Da fɛ gɛrɛfɛ.",ex:["bonjour","ordonnance","rond-point","ceinture"]},
+{l:"ch",s:"/ʃ/",r:"Comme « sh » anglais",mk:"I n'a fɔ « sh ».",ex:["cherche","ceinture","pharmacie","fiche"]},
+{l:"r",s:"/ʁ/",r:"Grasseyé au fond de la gorge",mk:"Duguma, tɛ malinké r ye.",ex:["rétroviseur","route","priorité","créneau"]},
+{l:"u",s:"/y/",r:"Lèvres rondes, langue en avant",mk:"Da yɔrɔ, kɔni « u » tɛ.",ex:["conduite","urgences","numéro","sécurité"]},
+{l:"oi",s:"/wa/",r:"Comme « wa »",mk:"Kɔni « wa » malinké la.",ex:["voie","rétroviseur","priorité","voiture"]},
+{l:"é/er/ez",s:"/e/",r:"E fermé, sourire léger",mk:"Da yɛlɛ dɔɔni.",ex:["permis","limitée","renouveler","examen"]},
+{l:"gn",s:"/ɲ/",r:"Comme « ñ » espagnol",mk:"Kɔni ñ Espagne la.",ex:["clignotant","signalisation","ordonnance","montagne"]},
+{l:"ai/è/ê",s:"/ɛ/",r:"E ouvert — bouche plus large",mk:"Da yɛlɛ ka ca.",ex:["arrêt","vitesse","fête","être"]},
+];
+
+// ═══════════════════════════════════════════════
+//  ÉTAT
+// ═══════════════════════════════════════════════
+const S={
+  xp:0,
+  mots:{idx:0,cat:"all"},
+  phrases:{idx:0,aw:null},
+  quiz:{idx:0,score:0,answered:false,cat:"all",questions:[]},
+  dictee:{idx:0,checked:false,score:0,list:[]},
+  recons:{idx:0,placed:[],checked:false,score:0,list:[],sh:null},
+  history:[],
+};
+
+function addXP(n){
+  S.xp+=n;
+  const el=document.getElementById('xp-display');
+  el.textContent=S.xp;
+  el.closest('.xp-chip').classList.remove('pop');
+  void el.offsetWidth;
+  el.closest('.xp-chip').classList.add('pop');
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+const PAGES=['mots','phrases','quiz','dictee','recons','phon','stats'];
+function showTab(name,btn){
+  PAGES.forEach(p=>{
+    const el=document.getElementById('pg-'+p);
+    if(el) el.classList.toggle('active',p===name);
+  });
+  document.querySelectorAll('.bnav-btn').forEach(b=>{
+    b.classList.remove('active');
+    b.querySelector('.ico-bar')?.remove();
+  });
+  if(btn){
+    btn.classList.add('active');
+    const bar=document.createElement('span');
+    bar.className='ico-bar';
+    btn.appendChild(bar);
+  }
+  if(name==='phon') renderPhon();
+  if(name==='stats') renderStats();
+}
+
+// ═══════════════════════════════════════════════
+//  SPEECH — sync dans le handler click (fix Android file://)
+// ═══════════════════════════════════════════════
+function speak(text, slow) {
+  if (!window.speechSynthesis) {
+    alert("Ton navigateur ne supporte pas la synthèse vocale.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = "fr-FR";
+  u.rate = slow ? 0.55 : 0.85;
+  u.pitch = 1.0;
+  u.volume = 1.0;
+  var voices = window.speechSynthesis.getVoices();
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang && voices[i].lang.indexOf("fr") === 0) {
+      u.voice = voices[i];
+      break;
+    }
+  }
+  window.speechSynthesis.speak(u);
+}
+
+// Détecter fichier local et afficher bannière
+(function() {
+  if (window.location.protocol === "file:") {
+    var b = document.getElementById("drive-banner");
+    if (b) b.style.display = "block";
+  }
+})();
+
+
+function speak(text, slow) {
+  if (!window.speechSynthesis) {
+    alert("Ouvre ce fichier dans Firefox pour le son !");
+    return;
+  }
+  window.speechSynthesis.cancel();
+
+  function doSpeak() {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "fr-FR";
+    u.rate = slow ? 0.55 : 0.85;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    var voices = window.speechSynthesis.getVoices();
+    var fr = null;
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang === "fr-FR") { fr = voices[i]; break; }
+    }
+    if (!fr) {
+      for (var i = 0; i < voices.length; i++) {
+        if (voices[i].lang && voices[i].lang.indexOf("fr") === 0) { fr = voices[i]; break; }
+      }
+    }
+    if (fr) u.voice = fr;
+    window.speechSynthesis.speak(u);
+  }
+
+  var voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    doSpeak();
+  } else {
+    window.speechSynthesis.onvoiceschanged = function() {
+      window.speechSynthesis.onvoiceschanged = null;
+      doSpeak();
+    };
+  }
+}
+
+// Détecter Chrome et afficher avertissement
+(function() {
+  var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  var isFirefox = typeof InstallTrigger !== 'undefined';
+  var b = document.getElementById('firefox-banner');
+  if (b) {
+    if (isFirefox) {
+      b.style.background = '#1A7A4A';
+      b.innerHTML = '✓ Firefox détecté — le son est activé !';
+    } else if (isChrome) {
+      b.style.display = 'block';
+    }
+  }
+})();
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
+function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/`/g,'\\`');}
+
+// ═══════════════════════════════════════════════
+//  PROGRESS
+// ═══════════════════════════════════════════════
+function setProg(bid,tid,cur,total,label){
+  const pct=total>0?Math.round(cur/total*100):0;
+  const el=document.getElementById(bid);
+  if(el) el.style.width=pct+'%';
+  const tl=document.getElementById(tid);
+  if(tl) tl.textContent=label;
+}
+
+// ═══════════════════════════════════════════════
+//  CAT PILLS
+// ═══════════════════════════════════════════════
+function buildCats(cid,cur,cb){
+  const el=document.getElementById(cid);
+  if(!el)return;
+  let h=`<button class="cpill cpill-all ${cur==='all'?'on':''}" onclick="${cb}('all')">🌍 Bɛɛ</button>`;
+  for(const[k,v]of Object.entries(CATS)){
+    h+=`<button class="cpill cpill-${k} ${cur===k?'on':''}" onclick="${cb}('${k}')">${v.e} ${v.l}</button>`;
+  }
+  el.innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════
+//  ONGLET MOTS
+// ═══════════════════════════════════════════════
+function fmots(){return S.mots.cat==='all'?MOTS:MOTS.filter(m=>m.cat===S.mots.cat);}
+function setCatMots(c){S.mots.cat=c;S.mots.idx=0;buildCats('cat-mots',c,'setCatMots');renderMot();}
+
+function renderMot(){
+  const list=fmots(),idx=S.mots.idx;
+  if(!list.length){document.getElementById('card-mot').innerHTML='<div class="card"><div class="empty">A foyi tɛ yen.</div></div>';return;}
+  const m=list[idx];
+  setProg('pb-mots','pt-mots',idx,list.length,`${idx+1} / ${list.length}`);
+  const cat=CATS[m.cat],col=`var(--tag-${m.cat})`;
+  const sylH=m.syl.map(s=>`<span class="syl" onclick="speak(${JSON.stringify(s)})">${s}</span>`).join('');
+  const prev=idx>0?'<button class="btn-nav" onclick="navMot(-1)">← Kɔfɛ</button>':'<span></span>';
+  const next=idx<list.length-1
+    ?'<button class="btn-nav primary" onclick="navMot(1)">Nata →</button>'
+    :'<button class="btn-nav primary" onclick="showTab(\'quiz\',document.querySelectorAll(\'.bnav-btn\')[2])">Quiz →</button>';
+
+  document.getElementById('card-mot').innerHTML=`<div class="card">
+    <div class="card-label">📖 Kuma kalanden</div>
+    <div class="mot-word">${m.word}</div>
+    <div class="mot-ph">${m.ph}</div>
+    <div class="mot-mk">${m.tr}</div>
+    <div class="mot-fr">${m.trfr}</div>
+    <span class="mot-badge" style="background:${col}18;color:${col};border:1px solid ${col}30">${cat.e} ${cat.l}</span>
+    <div class="syls" style="margin-top:16px">${sylH}</div>
+    <div class="syl-hint">👆 Taaci ka kuma mɛn</div>
+    <div class="listen-row">
+      <button class="btn-snd normal" onclick="speak(${JSON.stringify(m.word)})">${spkI()} Mɛn</button>
+      <button class="btn-snd slow" onclick="speak(${JSON.stringify(m.word)},true)">${clkI()} Nɔgɔya</button>
+    </div>
+    <div class="ex-box fr"><div class="ex-lbl">Fransɛ</div><div class="ex-txt">${m.ex}</div></div>
+    <div class="ex-box mk"><div class="ex-lbl">Malinké</div><div class="ex-txt">${m.ex_tr}</div></div>
+    <div class="nav-row">${prev}${next}</div>
+  </div>`;
+}
+function navMot(d){const l=fmots();S.mots.idx=Math.max(0,Math.min(l.length-1,S.mots.idx+d));renderMot();}
+
+// ═══════════════════════════════════════════════
+//  ONGLET PHRASES
+// ═══════════════════════════════════════════════
+function renderPhrase(){
+  const idx=S.phrases.idx,p=PHRASES[idx],aw=S.phrases.aw;
+  setProg('pb-phrases','pt-phrases',idx,PHRASES.length,`${idx+1} / ${PHRASES.length}`);
+  const cat=CATS[p.cat]||{e:'',l:''},col=`var(--tag-${p.cat},'#888')`;
+
+  let html=p.text;
+  Object.keys(p.words).sort((a,b)=>b.length-a.length).forEach(k=>{
+    const re=new RegExp(k.replace(/[-[\]/{}()*+?.\\^$|]/g,'\\$&'),'gi');
+    html=html.replace(re,m=>`<span class="wpill${aw===k?' hl':''}" onclick="showTip(${JSON.stringify(k)})">${m}</span>`);
+  });
+
+  const td=aw&&p.words[aw];
+  const tip=td?`<div class="wtip"><div class="wtip-w">${aw}</div><div class="wtip-ph">${td.ph}</div><div class="wtip-def">${td.def}</div><div class="wtip-mk">${td.mk}</div></div>`:'';
+  const prev=idx>0?'<button class="btn-nav" onclick="navPhrase(-1)">← Kɔfɛ</button>':'<span></span>';
+  const next=idx<PHRASES.length-1?'<button class="btn-nav primary" onclick="navPhrase(1)">Nata →</button>':'<button class="btn-nav primary" disabled>Laban ✓</button>';
+
+  document.getElementById('card-phrase').innerHTML=`<div class="card">
+    <div class="card-label" style="color:${col}">💬 Kɔrɔ — taaci kuma kan</div>
+    <span class="mot-badge" style="background:var(--tag-${p.cat})18;color:var(--tag-${p.cat});border:1px solid var(--tag-${p.cat})30;display:inline-flex;margin-bottom:12px">${cat.e} ${cat.l}</span>
+    <div class="sent">${html}</div>
+    ${tip}
+    <div class="listen-row" style="margin-top:14px">
+      <button class="btn-snd normal" onclick="speak(${JSON.stringify(p.text)})">${spkI()} Mɛn</button>
+      <button class="btn-snd slow" onclick="speak(${JSON.stringify(p.text)},true)">${clkI()} Nɔgɔya</button>
+    </div>
+    <div class="ex-box fr"><div class="ex-lbl">Fransɛ</div><div class="ex-txt" style="font-style:italic">${p.text}</div></div>
+    <div class="ex-box mk"><div class="ex-lbl">Malinké</div><div class="ex-txt">${p.trans}</div></div>
+    <div class="nav-row">${prev}${next}</div>
+  </div>`;
+}
+function showTip(w){S.phrases.aw=S.phrases.aw===w?null:w;renderPhrase();}
+function navPhrase(d){S.phrases.idx=Math.max(0,Math.min(PHRASES.length-1,S.phrases.idx+d));S.phrases.aw=null;renderPhrase();}
+
+// ═══════════════════════════════════════════════
+//  ONGLET QUIZ
+// ═══════════════════════════════════════════════
+function fquiz(c){return c==='all'?QUIZ_Q:QUIZ_Q.filter(q=>q.cat===c);}
+function setCatQuiz(c){S.quiz={...S.quiz,cat:c,idx:0,score:0,answered:false,questions:shuffle(fquiz(c))};buildCats('cat-quiz',c,'setCatQuiz');renderQuiz();}
+
+function renderQuiz(){
+  const{idx,score,answered,questions}=S.quiz,total=questions.length;
+  if(!total){document.getElementById('card-quiz').innerHTML='<div class="card"><div class="empty">A foyi tɛ yen.</div></div>';return;}
+  if(idx>=total){
+    const pct=Math.round(score/total*100);
+    S.history.push({label:`Ɲɛnabu (${S.quiz.cat==='all'?'Bɛɛ':CATS[S.quiz.cat]?.l||S.quiz.cat})`,score,total,pct});
+    setProg('pb-quiz','pt-quiz',total,total,'Laban !');
+    document.getElementById('card-quiz').innerHTML=`<div class="card">
+      <div class="card-label">✅ Kunnafoni</div>
+      <div class="result-big">
+        <div class="result-num">${score}/${total}</div>
+        <div class="result-pct">${pct}%</div>
+        <div class="result-msg">${pct>=80?'⭐ Aw ni kɛ !':pct>=50?'👍 Nɔgɔ ! Taa ɲɛ.':'📚 I ka segin kuma kan.'}</div>
+      </div>
+      <div class="nav-row" style="justify-content:center;gap:10px">
+        <button class="btn-nav" onclick="setCatQuiz(S.quiz.cat)">↺ Dɔ tɔ</button>
+        <button class="btn-nav primary" onclick="showTab('dictee',document.querySelectorAll('.bnav-btn')[3])">Dictée →</button>
+      </div>
+    </div>`;
+    return;
+  }
+  setProg('pb-quiz','pt-quiz',idx,total,`${idx+1}/${total} · ⭐${score}`);
+  const q=questions[idx];
+  const cH=q.choices.map((c,i)=>`<button class="choice" id="qc-${i}" onclick="ansQ(${i})" ${answered?'disabled':''}>${c}</button>`).join('');
+  const nav=answered?'<button class="btn-nav primary" onclick="nextQ()">Nata →</button>':'<span></span>';
+
+  document.getElementById('card-quiz').innerHTML=`<div class="card">
+    <div class="card-label">✏️ Ɲɛnabu</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-sub">(Français : ${q.qfr})</div>
+    <div class="choices">${cH}</div>
+    <div class="feedback" id="qfb"></div>
+    <div class="nav-row"><span class="score-lbl">Score : <strong>${score}</strong>/${idx}</span>${nav}</div>
+  </div>`;
+}
+function ansQ(chosen){
+  if(S.quiz.answered)return;
+  const q=S.quiz.questions[S.quiz.idx];
+  S.quiz.answered=true;
+  const ok=chosen===q.ans;
+  if(ok){S.quiz.score++;addXP(10);}
+  document.querySelectorAll('.choice').forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add('ok');else if(i===chosen&&!ok)b.classList.add('ko');});
+  const fb=document.getElementById('qfb');
+  fb.className='feedback show '+(ok?'ok':'ko');
+  fb.innerHTML=ok?'✓ Nɔgɔ ! +10 XP ⭐':`✗ Sɔrɔli : <strong>${q.choices[q.ans]}</strong>`;
+  if(!ok){const c=document.querySelector('#card-quiz .card');c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),350);}
+  const nr=document.querySelector('#card-quiz .nav-row');
+  if(nr) nr.innerHTML=`<span class="score-lbl">Score : <strong>${S.quiz.score}</strong>/${S.quiz.idx+1}</span><button class="btn-nav primary" onclick="nextQ()">Nata →</button>`;
+}
+function nextQ(){S.quiz.idx++;S.quiz.answered=false;renderQuiz();}
+
+// ═══════════════════════════════════════════════
+//  ONGLET DICTÉE
+// ═══════════════════════════════════════════════
+//  ONGLET DICTÉE — Mots ET Phrases
+// ═══════════════════════════════════════════════
+
+function setDicteeMode(mode){
+  S.dictee.mode = mode;
+  const bm = document.getElementById('dm-mots');
+  const bp = document.getElementById('dm-phrases');
+  if(bm) bm.classList.toggle('dm-on', mode==='mots');
+  if(bp) bp.classList.toggle('dm-on', mode==='phrases');
+  initDictee();
+}
+
+function initDictee(){
+  const mode = S.dictee.mode || 'mots';
+  let list;
+  if(mode === 'phrases'){
+    list = shuffle(PHRASES.map(p => ({ text: p.text, trans: p.trans, isPhrase: true })));
+  } else {
+    list = shuffle(MOTS.map(m => ({ word: m.word, ph: m.ph, tr: m.tr, isPhrase: false })));
+  }
+  S.dictee = { idx: 0, checked: false, score: 0, list, mode };
+  renderDictee();
+}
+
+function renderDictee(){
+  const { idx, checked, list, score, mode } = S.dictee;
+  const isP = mode === 'phrases';
+  if(!list || !list.length) return;
+
+  if(idx >= list.length){
+    const pct = Math.round(score / list.length * 100);
+    S.history.push({ label: 'Kumakan ' + (isP ? '(Kɔrɔ)' : '(Kuma)'), score, total: list.length, pct });
+    setProg('pb-dictee','pt-dictee', list.length, list.length, 'Laban !');
+    document.getElementById('card-dictee').innerHTML = `<div class="card">
+      <div class="card-label">🎧 Laban</div>
+      <div class="result-big">
+        <div class="result-num">${score}/${list.length}</div>
+        <div class="result-pct">${pct}%</div>
+        <div class="result-msg">${pct>=80?'⭐ Aw ni kɛ !':pct>=50?'👍 Nɔgɔ !':'📚 Segin kuma kan.'}</div>
+      </div>
+      <div class="nav-row" style="justify-content:center"><button class="btn-nav primary" onclick="initDictee()">↺ Dɔ tɔ</button></div>
+    </div>`;
+    return;
+  }
+
+  setProg('pb-dictee','pt-dictee', idx, list.length, `${idx+1} / ${list.length}`);
+  const item = list[idx];
+  const spoken = isP ? item.text : item.word;
+  // Échapper les apostrophes pour l'attribut onclick
+  const spokenJ = JSON.stringify(spoken);
+
+  const infoText = isP
+    ? 'Kɔrɔ mɛn ka a sɛbɛn fransɛ la<em>Écoute la phrase et écris-la en français</em>'
+    : 'Kuma mɛn ka a sɛbɛn fransɛ la<em>Écoute et écris le mot en français</em>';
+
+  const mkBox = isP
+    ? `<div style="background:rgba(26,122,74,.08);border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:.82rem;color:var(--green);font-weight:700;line-height:1.4">🟢 Malinké : ${item.trans}</div>`
+    : '';
+
+  const inputEl = isP
+    ? `<textarea class="dinput" id="d-inp" rows="3"
+        style="min-height:72px;resize:none;font-size:.98rem;line-height:1.5;padding:10px 12px;border:2px solid var(--line);border-radius:10px;display:block;width:100%;background:transparent;outline:none;font-family:inherit;"
+        inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false"
+        placeholder="Écris la phrase ici…"
+        ${checked ? 'disabled' : ''}></textarea>`
+    : `<input class="dinput" id="d-inp" type="text"
+        inputmode="text" autocomplete="off" autocorrect="off" spellcheck="false"
+        placeholder="Sɛbɛn yen…"
+        onkeydown="handleDicteeKey(event)"
+        ${checked ? 'disabled' : ''}/>`;
+
+  document.getElementById('card-dictee').innerHTML = `<div class="card">
+    <div class="card-label">🎧 Kumakan — ${isP ? 'Kɔrɔ (phrase)' : 'Kuma (mot)'}</div>
+    <div class="dictee-info">${infoText}</div>
+    <div class="listen-row" style="margin-bottom:${isP ? '12' : '20'}px">
+      <button class="btn-snd normal" onclick="speak(${spokenJ})">${spkI()} Mɛn</button>
+      <button class="btn-snd slow" onclick="speak(${spokenJ},true)">${clkI()} Nɔgɔya</button>
+    </div>
+    ${mkBox}
+    ${inputEl}
+    <div class="dhint" id="d-hint">${checked ? '' : (isP ? 'Écris puis clique → Segin' : '↵ Entrée ou → Segin')}</div>
+    <div class="feedback" id="d-fb"></div>
+    <div class="nav-row" style="margin-top:14px">
+      <span></span>
+      ${checked
+        ? `<button class="btn-nav primary" onclick="nextDictee()">Nata →</button>`
+        : `<button class="btn-nav primary" onclick="checkDictee()">Segin ✓</button>`}
+    </div>
+  </div>`;
+  if(!checked) setTimeout(() => document.getElementById('d-inp')?.focus(), 80);
+}
+
+function normStr(s){
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[.,!?;:\']/g,'').replace(/\s+/g,' ');
+}
+
+function handleDicteeKey(e){ if(e.key==='Enter') checkDictee(); }
+
+function checkDictee(){
+  if(S.dictee.checked) return;
+  const inp = document.getElementById('d-inp');
+  if(!inp) return;
+  const val = normStr(inp.value);
+  const item = S.dictee.list[S.dictee.idx];
+  const isP = S.dictee.mode === 'phrases';
+  const tgt = normStr(isP ? item.text : item.word);
+
+  let ok = false, pctMatch = 100;
+  if(isP){
+    const vW = val.split(' ').filter(Boolean);
+    const tW = tgt.split(' ').filter(Boolean);
+    const matched = tW.filter((w,i) => vW[i] === w).length;
+    pctMatch = Math.round(matched / tW.length * 100);
+    ok = pctMatch >= 75;
+  } else {
+    ok = val === tgt;
+  }
+
+  S.dictee.checked = true;
+  if(ok){ S.dictee.score++; addXP(isP ? 20 : 15); }
+
+  // Style visuel
+  if(isP){
+    inp.style.borderColor = ok ? 'var(--ok)' : 'var(--ko)';
+    inp.style.color = ok ? 'var(--ok)' : 'var(--ko)';
+  } else {
+    inp.classList.add(ok ? 'ok' : 'ko');
+  }
+  inp.disabled = true;
+
+  const fb = document.getElementById('d-fb');
+  fb.className = 'feedback show ' + (ok ? 'ok' : 'ko');
+  if(isP){
+    fb.innerHTML = ok
+      ? `✓ Nɔgɔ ! ${pctMatch === 100 ? 'Parfait !' : pctMatch + '% correct'} · +20 XP`
+      : `✗ Sɔrɔli :<br><strong style="font-size:.88rem;font-weight:800">${item.text}</strong>`;
+  } else {
+    fb.innerHTML = ok
+      ? `✓ Nɔgɔ ! ${item.ph} — ${item.tr} · +15 XP`
+      : `✗ Sɔrɔli : <strong>${item.word}</strong> ${item.ph}<br><em>${item.tr}</em>`;
+  }
+
+  const nr = document.querySelector('#card-dictee .nav-row');
+  if(nr) nr.innerHTML = `<span></span><button class="btn-nav primary" onclick="nextDictee()">Nata →</button>`;
+}
+
+function nextDictee(){ S.dictee.idx++; S.dictee.checked = false; renderDictee(); }
+
+// ═══════════════════════════════════════════════
+//  ONGLET RECONSTITUTION
+// ═══════════════════════════════════════════════
+function initRecons(){S.recons={idx:0,placed:[],checked:false,score:0,list:shuffle([...RECONS_PH]),sh:null};renderRecons();}
+function renderRecons(){
+  const{idx,placed,checked,list,score}=S.recons;
+  if(idx>=list.length){
+    const pct=Math.round(score/list.length*100);
+    S.history.push({label:'Lajɛ',score,total:list.length,pct});
+    setProg('pb-recons','pt-recons',list.length,list.length,'Laban !');
+    document.getElementById('card-recons').innerHTML=`<div class="card">
+      <div class="card-label">🔀 Laban</div>
+      <div class="result-big"><div class="result-num">${score}/${list.length}</div></div>
+      <div class="nav-row" style="justify-content:center"><button class="btn-nav primary" onclick="initRecons()">↺ Dɔ tɔ</button></div>
+    </div>`;return;
+  }
+  setProg('pb-recons','pt-recons',idx,list.length,`${idx+1} / ${list.length}`);
+  const ph=list[idx];
+  if(!S.recons.sh) S.recons.sh=shuffle([...ph.words]);
+  const avail=S.recons.sh.filter(w=>!placed.includes(w));
+  const placedH=placed.map(w=>`<span class="rtok placed" onclick="removeW(${JSON.stringify(w)},${checked})">${w}</span>`).join('');
+  const availH=avail.map(w=>`<span class="rtok avail" onclick="placeW(${JSON.stringify(w)},${checked})">${w}</span>`).join('');
+  const ok=checked&&placed.join(' ')===ph.words.join(' ');
+  const fb=checked?`<div class="feedback show ${ok?'ok':'ko'}">${ok?'✓ Nɔgɔ ! +20 XP ⭐':'✗ Sɔrɔli : <strong>'+ph.words.join(' ')+'</strong>'}</div>`:'';
+
+  document.getElementById('card-recons').innerHTML=`<div class="card">
+    <div class="card-label">🔀 Lajɛ — kuma lajɛ</div>
+    <div class="recons-label">I ka kɔrɔ</div>
+    <div class="recons-zone">${placedH||'<span style="color:var(--line);font-size:.82rem">Kuma digi ye…</span>'}</div>
+    <div class="recons-label">Kuma dɔnna</div>
+    <div class="rwords">${availH}</div>
+    ${fb}
+    <div class="recons-tr">🟢 ${ph.trans}</div>
+    <div class="listen-row" style="margin-top:10px">
+      <button class="btn-snd normal" onclick="speak(${JSON.stringify(ph.words.join(' '))})">${spkI()} Mɛn</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-nav" onclick="resetRecons()">↺</button>
+      ${checked ? '<button class="btn-nav primary" onclick="nextRecons()">Nata →</button>' : '<button class="btn-nav primary" onclick="checkRecons()"' + (placed.length===ph.words.length ? '' : ' disabled') + '>Segin ✓</button>'}
+    </div>
+  </div>`;
+}
+function placeW(w,l){if(l)return;S.recons.placed=[...S.recons.placed,w];renderRecons();}
+function removeW(w,l){if(l)return;const i=S.recons.placed.indexOf(w);if(i>-1)S.recons.placed=[...S.recons.placed.slice(0,i),...S.recons.placed.slice(i+1)];renderRecons();}
+function checkRecons(){S.recons.checked=true;const ph=S.recons.list[S.recons.idx];if(S.recons.placed.join(' ')===ph.words.join(' ')){S.recons.score++;addXP(20);}renderRecons();}
+function nextRecons(){S.recons.idx++;S.recons.placed=[];S.recons.checked=false;S.recons.sh=null;renderRecons();}
+function resetRecons(){S.recons.placed=[];S.recons.checked=false;S.recons.sh=null;renderRecons();}
+
+// ═══════════════════════════════════════════════
+//  PHONÉTIQUE
+// ═══════════════════════════════════════════════
+function renderPhon(){
+  const cards=PHON.map(r=>`
+    <div class="phon-card">
+      <div class="phon-letters">${r.l}</div>
+      <div class="phon-sound">${r.s}</div>
+      <div class="phon-rule">${r.r}</div>
+      <div class="phon-mk">${r.mk}</div>
+      <div class="phon-exs">${r.ex.map(e=>`<span class="phon-ex" onclick="speak(${JSON.stringify(e)})">${e}</span>`).join('')}</div>
+    </div>`).join('');
+  document.getElementById('card-phon').innerHTML=`<div class="card">
+    <div class="card-label">🔤 Sɛbɛn kalanden — Phonétique</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:16px;line-height:1.5">I ka sira sariyaw kalan — Apprends ces sons et lis n'importe quel mot ! Taaci exemple ka mɛn.</p>
+    <div class="phon-grid">${cards}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  STATS
+// ═══════════════════════════════════════════════
+function renderStats(){
+  const hist=S.history.slice().reverse().map(h=>{
+    const c=h.pct>=80?'g':h.pct>=50?'m':'b';
+    return `<li class="hist-item"><span style="font-weight:700">${h.label}</span><span class="hscore ${c}">${h.score}/${h.total} (${h.pct}%)</span></li>`;
+  }).join('')||'<li class="hist-item" style="color:var(--muted)">A foyi tɛ yen fɔlɔ.</li>';
+
+  document.getElementById('card-stats').innerHTML=`<div class="card">
+    <div class="card-label">📊 Kɛrɛnkɛrɛnna</div>
+    <div class="stats-grid">
+      <div class="scard"><div class="snum">${S.xp}</div><div class="slbl">XP ⭐</div></div>
+      <div class="scard"><div class="snum">${MOTS.length}</div><div class="slbl">Kumaw</div></div>
+      <div class="scard"><div class="snum">${PHRASES.length}</div><div class="slbl">Kɔrɔw</div></div>
+      <div class="scard"><div class="snum">${QUIZ_Q.length}</div><div class="slbl">Ɲɛnabu</div></div>
+      <div class="scard"><div class="snum">${RECONS_PH.length}</div><div class="slbl">Lajɛ</div></div>
+      <div class="scard"><div class="snum">${PHON.length}</div><div class="slbl">Sira son</div></div>
+    </div>
+    <div style="font-size:.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px">Kɛliw lajɛli</div>
+    <ul class="hist-list">${hist}</ul>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+//  ICÔNES SVG
+// ═══════════════════════════════════════════════
+function spkI(){return`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;}
+function clkI(){return`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+buildCats('cat-mots','all','setCatMots');
+buildCats('cat-quiz','all','setCatQuiz');
+S.quiz.questions=shuffle([...QUIZ_Q]);
+renderMot();
+renderPhrase();
+renderQuiz();
+initDictee();
+initRecons();
+
+// Voix préchargées via _loadVoices() dans la section SPEECH
+</script>
+</body>
+</html>
